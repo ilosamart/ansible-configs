@@ -7,7 +7,7 @@
           password="{{ common_ansible_user.password }}" groups=admin append=no
 
   - name: insert authorized key for user ansible
-    authorized_key: user="{{ common_ansible_user.username }}" key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    authorized_key: user="{{ common_ansible_user.username }}" key="{{ lookup('file', '~/.ssh/id_rsa_ansible.pub') }}"
 
   - name: make sure we can sudo as admin group
     lineinfile: dest=/etc/sudoers state=present regexp='^%admin' line='%admin ALL=(ALL) NOPASSWD:ALL' \

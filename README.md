@@ -11,7 +11,7 @@ This repo contains the basic file structure for Ansible. For convenience I sugge
   * role-skell.sh - Creates the default folders for an intended new role (under playbooks/roles).
   * mkpass.py - Creates password strings as described in 'http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module'.
 * environment
-  * doc - For testing with docker. You'll need one container of the 'mgood/resolvable' image (for DNS registration on the host to work) plus the images you'll want to test enumerated and grouped in the 'inventory' file.
+  * doc - For testing with docker. You'll need one container of the 'mgood/resolvable' image (for DNS registration on the host to work) plus the images you'll want to test enumerated and grouped in the 'inventory' file. For DNS registration on the host with 'resolvable', use 'docker run -d --hostname web1 --name web1 tramasoli/centos6-sshd'.
   * des - For machines in 'desenvolvimento'.
   * hml - For machines in 'homologação'.
   * prd - For machines in 'produção'.
