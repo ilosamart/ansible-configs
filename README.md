@@ -4,7 +4,6 @@
 This repo contains the basic file structure for Ansible. For convenience I suggest you add aliases like these to you .profile or equivalent script:
 * alias ansible-[ENV]='ansible -i ~/git/ansible-configs/environments/[ENV]'
 * alias ansible-playbook-[ENV]='ansible-playbook -i ~/git/ansible-configs/environments/[ENV]'
-
 # Folder hierarchy
 * bin - For auxiliary scripts.
   * queryredis.py - Query the redis backend for information extracted by ansible from managed hosts (must be enabled in /etc/ansible.ansible.cfg).
