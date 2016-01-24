@@ -1,4 +1,9 @@
----    
+---
+  - name: install sudo tool
+    yum: name=sudo state=present
+    when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "6") or
+          (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
+
   - name: create admin group
     group: name=admin system=yes state=present
 

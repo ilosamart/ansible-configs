@@ -1,0 +1,8 @@
+---
+  group_apache_vhost:
+    - ip_addr: "{{ host.pub_ip }}"
+    - vhost_name: www.intra
+    - document_root: /var/www/html
+    - vhost_alias:
+        - alias.intra
+        - anotheralias.intra

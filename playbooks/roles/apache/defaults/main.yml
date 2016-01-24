@@ -1,0 +1,4 @@
+---
+  apache_ports:
+    - { port: 80, description: "Default http port" }
+    - { port: 443, description: "Default http port" }

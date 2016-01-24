@@ -1,0 +1,9 @@
+---
+  - name: ensure apache is installed
+    yum: name=httpd state=present
+
+  - debug: var=apache_port
+
+  - debug: var=host
+  
+  - debug: var=group_apache_vhost

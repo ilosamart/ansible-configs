@@ -1,3 +1,4 @@
-[web]
+[intranet]
 web1.docker
 web2.docker
+web3.docker

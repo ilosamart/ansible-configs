@@ -1,0 +1,7 @@
+- hosts: intranet
+  user: ansible
+  sudo: yes
+  roles:
+    - apache
+
+  tasks:

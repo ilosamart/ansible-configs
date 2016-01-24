@@ -5,12 +5,12 @@ import json
 import sys
 
 def main(host):
-	r = redis.StrictRedis(host='localhost', port=6379, db=0)
+	r = redis.StrictRedis(host='redis.docker', port=6379, db=0)
 	key = "ansible_facts" + host
 	val = r.get(key)
 	
 	data = json.loads(val)
-	print data
+	print val
 
 if __name__ == "__main__":
 	if len(sys.argv) == 2:
