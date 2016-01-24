@@ -1,0 +1,7 @@
+- hosts: all
+  user: ansible
+  sudo: yes
+
+  tasks:
+    - name: Get uptime
+      shell: uptime

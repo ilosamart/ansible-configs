@@ -1,0 +1,8 @@
+---
+common_ansible_user:
+  username: "ansible"
+  password: $6$rounds=656000$SwhB1i3AKwLxKzUB$v/xmMr8l2Y8DQ3YupreBFUTXfkKAokYmzjIAYWcvFOeat7p9NCysoZCPMVjKs65ZOrVooPMK6gVjR6Dy5ndV40
+common_root_user:
+  password: $6$rounds=656000$4OyRS7UAkPDP4wCo$OwohttupxdPexraxYNKU/pRXrBjGAjbz0MSDtWpBArCCozis66dyT5sSYvBAls3pZhR217GPK8txHpngjsDtm0
+common_contact_info:
+  email: "fabio@tramasoli.com"

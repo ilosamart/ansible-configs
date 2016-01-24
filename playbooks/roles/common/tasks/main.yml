@@ -1,0 +1,6 @@
+---
+  - name: create motd
+    copy: src=motd dest=/etc/motd owner=root group=root mode="u+rw,g+r,o+r"
+
+  - include: ensure-root-user.yml
+  - include: ensure-ansible-user.yml

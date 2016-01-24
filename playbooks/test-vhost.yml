@@ -1,0 +1,136 @@
+- hosts: intra-homolog-new
+  user: ansible
+  sudo: yes
+  roles:
+    - yaegashi.blockinfile
+  vars:
+    mail_dest: "{{ common_contact_info.email }}" 
+    vhostName: www.homolog
+    vhostContent: |
+      <VirtualHost ${VAR_ETH0_IPADDR}:80>
+        ServerAdmin di_redesrv@tj.rs.gov.br
+        DocumentRoot /var/www/sites/www
+        ServerName {{ vhostName }}
+        LogLevel error
+        ErrorLog /var/log/httpd/{{ vhostName }}-error.log
+        TransferLog /var/log/httpd/{{ vhostName }}-access.log
+        # APPS
+        # WEBLOGIC
+        Include /etc/httpd/apps.d/{{ vhostName }}/wls.inc
+        # TOMCAT
+        Include /etc/httpd/apps.d/{{ vhostName }}/tomcat.inc
+        # PHP
+        Include /etc/httpd/apps.d/{{ vhostName }}/php.inc
+      </VirtualHost>
+
+    z_load_sites_content: |
+      Include /etc/httpd/sites-enabled/*.conf
+
+    wls_1213_content: |
+      <IfModule mod_weblogic.c>
+        WebLogicCluster  wls-srv:7003
+        SetHandler weblogic-handler
+      </IfModule>
+
+    wls_app_location: |
+      <Location ~ "^/{{ item.url }}">
+        AddDefaultCharset       ISO-8859-1
+        Include /etc/httpd/proxy.d/{{ item.cluster }}.inc
+      </Location>
+
+  tasks:
+    - name: Cria diretórios padrão para Apache
+      file: 
+        path: /etc/httpd/{{ item.dirname }}
+        state: directory
+        owner: root
+        group: root
+      with_items:
+        - { dirname: 'proxy.d' }
+        - { dirname: 'conf.d' }
+        - { dirname: "apps.d/{{ vhostName }}" }
+        - { dirname: 'sites-available' }
+        - { dirname: 'sites-enabled' }
+
+    - name: Cria arquivos padrão para apache
+      file: 
+        path: /etc/httpd/apps.d/{{ vhostName }}/{{ item.type }}.inc
+        state: touch
+        owner: root
+        group: root
+      with_items:
+        - { type: 'wls' }
+        - { type: 'tomcat' }
+        - { type: 'php' }
+
+    - name: Create weblogic_12.1.3.inc
+      blockinfile:
+        dest: /etc/httpd/proxy.d/weblogic_12.1.3.inc
+        block: "{{ wls_arqsis_1213_content }}"
+        marker: "### {mark} ANSIBLE MANAGED ###"
+        insertbefore: BOF
+        create: yes
+        state: present
+      notify: 
+        - httpd changed
+
+    - name: Create z_load_sites-enabled.conf
+      blockinfile:
+        dest: /etc/httpd/conf.d/z_load_sites-enabled.conf
+        block: "{{ z_load_sites_content }}"
+        marker: "### {mark} ANSIBLE MANAGED ###"
+        insertbefore: BOF
+        create: yes
+        state: present
+      notify: 
+        - httpd changed
+
+    - name: Create www virtual host header
+      blockinfile:
+        dest: /etc/httpd/sites-available/{{ vhostName }}.conf
+        block: "{{ vhostContent }}"
+        marker: "### {mark} ANSIBLE MANAGED - {{ vhostName }} ###"
+        insertbefore: BOF
+        create: yes
+        state: present
+      notify: 
+        - httpd changed
+
+    - name: Create www virtual host apps
+      blockinfile:
+        dest: /etc/httpd/apps.d/{{ vhostName }}/wls.inc
+        marker: "### {mark} ANSIBLE MANAGED - wls app {{ item.url }} ###"
+        insertafter: EOF
+        create: yes
+        state: present
+        block: "{{ wls_app_location }}"
+      with_items:
+        - { url: 'iamatest', cluster: 'weblogic_12.1.3' }
+        - { url: 'idem', cluster: 'weblogic_12.1.3' }
+        - { url: 'ibidem', cluster: 'weblogic_12.1.3' }
+      notify: 
+        - httpd changed
+
+    - name: Remove www virtual host apps
+      blockinfile:
+        dest: /etc/httpd/apps.d/{{ vhostName }}/wls.inc
+        marker: "### {mark} ANSIBLE MANAGED - wls app {{ item.url }} ###"
+        insertafter: EOF
+        create: yes
+        state: absent
+        block: "{{ wls_app_location }}"
+      with_items:
+        - { url: 'idem', cluster: 'weblogic_12.1.3' }
+      notify: 
+        - httpd changed
+
+    - name: Habilita virtual hosts
+      file: src=/etc/httpd/sites-available/{{ item.src }} dest=/etc/httpd/sites-enabled/{{ item.dest }} state=link
+      with_items:
+        - { src: "{{ vhostName }}.conf", dest: "000-{{ vhostName }}.conf" }
+      notify: 
+        - httpd changed
+
+  handlers:
+    - name: httpd changed
+      shell: /sbin/apachectl restart

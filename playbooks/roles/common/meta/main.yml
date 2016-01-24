@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Fábio B. Tramasoli
+  description: Initial setup of hosts and Ansible user with key auth.
+  company: N/A
+  license: MIT
+  min_ansible_version: 1.9
+  platforms:
+  - name: EL
+    versions:
+    - all
+  galaxy_tags:
+    - initial
+    - common
+dependencies:

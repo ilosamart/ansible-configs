@@ -1,0 +1,3 @@
+# Roles to install on Ansible Master ;)
+---
+  - src: yaegashi.blockinfile
