@@ -1,8 +1,18 @@
 ---
   group_apache_vhost:
-    - ip_addr: "{{ host.pub_ip }}"
-    - vhost_name: www.intra
-    - document_root: /var/www/html
-    - vhost_alias:
+    - intra:
+      admin_email: dum@dum.localhost
+      ip_addr: "{{ ansible_eth0.ipv4.address }}" 
+      vhost_name: www.intra
+      document_root: /var/www/html
+      vhost_alias:
         - alias.intra
         - anotheralias.intra
+    - ws:
+      admin_email: dummer@dum.localhost
+      ip_addr: "{{ ansible_eth0.ipv4.address }}" 
+      vhost_name: ws.intra
+      document_root: /var/www/ws
+      vhost_alias:
+        - ws-alias.intra
+        - ws-anotheralias.intra

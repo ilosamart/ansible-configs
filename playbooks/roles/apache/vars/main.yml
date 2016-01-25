@@ -1,1 +1,14 @@
 ---
+  apache_conf_dir: "/etc/httpd"
+  apache_default_vhost_includes:
+    - { filename: "wls.inc" }
+    - { filename: "tomcat.inc" }
+    - { filename: "php.inc" }
+    - { filename: "custom.inc" }
+  apache_default_dirs:
+    - { dirname: 'proxy.d' }
+    - { dirname: 'conf.d' }
+    - { dirname: "vhost.d" }
+    - { dirname: 'sites-available' }
+    - { dirname: 'sites-enabled' }
+

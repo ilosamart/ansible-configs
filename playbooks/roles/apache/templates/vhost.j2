@@ -1,20 +1,20 @@
-  <VirtualHost {{ host_pub_ip_addr }}:{{ item.port }},{{ item.pub_ip_addr }}:{{ item.port }}>
-    ServerAdmin di_redesrv@tj.rs.gov.br
-    DocumentRoot {{ item.document_root }}
-    ServerName {{ item.vhost_name }}
-    {% for alias in item.vhost_alias %}
-    ServerAlias {{ alias }}
-    {% endfor %}
-    LogLevel error
-    ErrorLog /var/log/httpd/{{ item.vhost_name }}-error.log
-    TransferLog /var/log/httpd/{{ item.vhost_name }}-access.log
-    # APPS
-    # WEBLOGIC
-    Include /etc/httpd/apps.d/{{ item.vhost_name }}/wls.inc
-    # TOMCAT
-    Include /etc/httpd/apps.d/{{ item.vhost_name }}/tomcat.inc
-    # PHP
-    Include /etc/httpd/apps.d/{{ item.vhost_name }}/php.inc
-    # CUSTOM - not managed by Ansible (gambis)
-    Include /etc/httpd/custom.d/{{ item.vhost_name }}/custom.inc
-  </VirtualHost>
+<VirtualHost {{ host_pub_ip_addr|default('127.0.0.1') }}:{{ item.port|default('80') }},{{ item.ip_addr|default('0.0.0.0') }}:{{ item.port|default('80') }}>
+  ServerAdmin {{ item.admin_email }}
+  DocumentRoot {{ item.document_root }}
+  ServerName {{ item.vhost_name }}
+  {% for alias in item.vhost_alias %}
+  ServerAlias {{ alias }}
+  {% endfor %}
+  LogLevel error
+  ErrorLog /var/log/httpd/{{ item.vhost_name }}-error.log
+  TransferLog /var/log/httpd/{{ item.vhost_name }}-access.log
+  # APPS
+  # WEBLOGIC
+  Include /etc/httpd/vhost.d/{{ item.vhost_name }}/wls.inc
+  # TOMCAT
+  Include /etc/httpd/vhost.d/{{ item.vhost_name }}/tomcat.inc
+  # PHP
+  Include /etc/httpd/vhost.d/{{ item.vhost_name }}/php.inc
+  # CUSTOM - not managed by Ansible (gambis)
+  Include /etc/httpd/vhost.d/{{ item.vhost_name }}/custom.inc
+</VirtualHost>

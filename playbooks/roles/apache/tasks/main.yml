@@ -2,8 +2,44 @@
   - name: ensure apache is installed
     yum: name=httpd state=present
 
-  - debug: var=apache_port
+  - name: create default apache dirs
+    file:
+      path: "{{ apache_conf_dir }}/{{ item.dirname }}"
+      state: directory
+      owner: root
+      group: root
+    with_items:
+      apache_default_dirs
 
-  - debug: var=host
-  
-  - debug: var=group_apache_vhost
+  - name: create default vhost dir
+    file:
+      path: "{{ apache_conf_dir }}/vhost.d/{{ item.vhost_name }}"
+      state: directory
+      owner: root
+      group: root
+    with_items:
+      group_apache_vhost
+
+  - name: create default vhost files
+    copy:
+      content: ""
+      dest: "{{ apache_conf_dir }}/vhost.d/{{ item.0.vhost_name }}/{{ item.1.filename }}"
+      owner: apache
+      group: apache
+    with_nested:
+      - group_apache_vhost
+      - apache_default_vhost_includes
+
+  - name: create vhost document root dir
+    file:
+      path: "{{ item.document_root }}"
+      state: directory
+      owner: apache
+      group: apache
+    with_items:
+      group_apache_vhost
+
+  - name: create vhost config
+    template: src=vhost.j2 dest="{{ apache_conf_dir }}/sites-available/{{ item.vhost_name }}.conf"
+    with_items:
+      group_apache_vhost
